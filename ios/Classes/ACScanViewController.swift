@@ -203,7 +203,7 @@ class ACScanViewController: UIViewController {
     }
     
     @objc func animalStart() {
-        view.bringSubview(toFront: self.animalLine)
+        view.bringSubviewToFront(self.animalLine)
         animalLine.frame = CGRect.init(x: leftTopPoint.x, y: leftTopPoint.y + kNavigationHeight , width: kBoxW, height: 1)
         UIView.animate(withDuration: 3, animations: {
             
@@ -228,7 +228,7 @@ class ACScanViewController: UIViewController {
     func setupTimer()  {
         self.animalStart()
         self.timer = Timer.init(timeInterval: 3, target: self, selector: #selector(animalStart), userInfo: nil, repeats: true)
-        RunLoop.main.add(self.timer!, forMode: RunLoop.Mode.commonModes)
+        RunLoop.main.add(self.timer!, forMode: RunLoop.Mode.common)
     }
     deinit {
         print("dealloc")
