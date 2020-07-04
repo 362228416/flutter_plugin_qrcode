@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-/// 屏幕宽度
+/// 屏幕宽度1
 let kScreenWidth = UIScreen.main.bounds.size.width
 
 /// 屏幕高度
@@ -146,19 +146,34 @@ class ACScanViewController: UIViewController {
         startRunning()
     }
     
+    @objc func newButtonAction() {
+//        print("select new button")
+//        let objViewController =  UIApplication.shared.keyWindow?.rootViewController
+//        objViewController?.dismiss(animated: true, completion:  nil)
+        
+        // 取消扫描
+        stopRunning()
+
+        //self.dismiss(animated: true, completion: nil)
+        DispatchQueue.main.async {
+          self.dismiss(animated: true, completion: nil)
+        }
+        
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "扫描二维码"
+
         /// 获取设备
         let devices = AVCaptureDevice.devices(for: .video)
         let d = devices.filter({ return $0.position == .back }).first
         /// 视频输入
         let videoInput = try? AVCaptureDeviceInput(device: d!)
         let queue =  DispatchQueue.global(qos: .default)
-        
+
         let videoOutput = AVCaptureMetadataOutput()
-        
+
         videoOutput.setMetadataObjectsDelegate(self, queue: queue)
         if session.canAddInput(videoInput!) {
             session.addInput(videoInput!)
@@ -178,6 +193,13 @@ class ACScanViewController: UIViewController {
         ///可识别区域  注意看这个rectOfInterest  不是一左上角为原点，以右上角为原点 并且rect的值是个比例在【0，1】之间
         videoOutput.rectOfInterest = CGRect.init(x: (kBoxCentY - (kBoxW/2) + kNavigationHeight/2)/kScreenHeight, y: 1 - (kScreenWidth + kBoxW)/2/kScreenWidth, width: kBoxW/kScreenHeight, height: kBoxW/kScreenWidth)
         view.layer.addSublayer(preview)
+        
+        let newButton:UIButton = UIButton(frame: CGRect(x: 20, y: 20, width: 50, height: 50))
+//        newButton.backgroundColor = UIColor.blue
+        newButton.setTitle("返回", for: .normal)
+        newButton.addTarget(self, action: #selector(newButtonAction), for: .touchUpInside)
+        self.view.addSubview(newButton)
+        
         self.view.addSubview(prompt)
     }
     
